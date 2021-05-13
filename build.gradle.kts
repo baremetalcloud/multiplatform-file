@@ -1,4 +1,4 @@
-version="0.55"
+version="0.57"
 group="com.baremetalcloud"
 
 plugins {
