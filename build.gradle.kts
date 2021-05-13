@@ -1,4 +1,4 @@
-version="0.54"
+version="0.55"
 group="com.baremetalcloud"
 
 plugins {
@@ -47,7 +47,7 @@ kotlin {
       dependencies {
         implementation(kotlin("test-common"))
         implementation(kotlin("test-annotations-common"))
-        implementation("com.baremetalcloud:multiplatform-runblocking:0.50")
+        implementation("com.baremetalcloud:multiplatform-runblocking:0.52")
       }
     }
     val jvmMain by getting {
