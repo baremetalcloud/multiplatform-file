@@ -1,28 +1,22 @@
-package com.baremetalcloud.file.ext
+package com.baremetalcloud.file
 
-import com.baremetalcloud.file.FileCommon
-import com.baremetalcloud.file.FileResult
-import kotlinx.cinterop.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import platform.posix.*
+import kotlinx.cinterop.addressOf
+import kotlinx.cinterop.alloc
+import kotlinx.cinterop.convert
+import kotlinx.cinterop.nativeHeap
+import kotlinx.cinterop.ptr
+import kotlinx.cinterop.usePinned
+import platform.posix.O_RDONLY
+import platform.posix.SEEK_SET
+import platform.posix.lseek
+import platform.posix.open
+import platform.posix.ssize_t
+import platform.posix.stat
 
-public actual suspend fun FileCommon.readBytes(): FileResult<ByteArray> {
-    lateinit var r: FileResult<ByteArray>
-    withContext(Dispatchers.Default) {
-        runCatching {
-            r = FileResult.Success(InputStream(this@readBytes).readBytes())
-        }.onFailure {
-            r = FileResult.Failure(it)
-        }
-    }
-    return r
-}
+internal data class InputStream(val file: FileCommon) {
 
-private data class InputStream(val file: FileCommon) {
-
-    private var fd = open(file.absolute, O_RDONLY)
-    private var contentSize = nativeHeap.alloc<stat>().apply { stat(file.absolute, this.ptr) }.st_size - 1
+    private var fd = open(file.absoluteFilename, O_RDONLY)
+    private var contentSize = nativeHeap.alloc<stat>().apply { stat(file.absoluteFilename, this.ptr) }.st_size - 1
 
     private var bytesRead = 0L
 
@@ -34,7 +28,7 @@ private data class InputStream(val file: FileCommon) {
 
     private fun readBytes(bytes: ByteArray): ssize_t {
         return bytes.usePinned {
-            read(fd, it.addressOf(0), bytes.size.convert())
+            platform.posix.read(fd, it.addressOf(0), bytes.size.convert())
         }
     }
 
@@ -58,7 +52,7 @@ private data class InputStream(val file: FileCommon) {
 
     fun getFD() = fd
 
-    fun close() = close(fd)
+    fun close() = platform.posix.close(fd)
 
     //val dbuff = if (contentSize-bytesRead > buffer.size) buffer.size.toInt() else (contentSize-bytesRead)
 }

@@ -1,4 +1,4 @@
-package com.baremetalcloud.file.ext
+package com.baremetalcloud.file
 
 import com.baremetalcloud.file.FileCommon
 import com.baremetalcloud.file.FileResult
@@ -7,23 +7,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import platform.posix.*
 
-public actual suspend fun FileCommon.writeBytes(array: ByteArray): FileResult<Unit> {
-    lateinit var r: FileResult<Unit>
-    withContext(Dispatchers.Default) {
-        runCatching {
-            OutputStream(this@writeBytes).write(array)
-            r = FileResult.Success(Unit)
-        }.onFailure {
-            r = FileResult.Failure(it)
-        }
-    }
-    return r
-
-}
-
-private data class OutputStream(val file: FileCommon) {
-    private var fd: Int = open(file.absolute, O_RDWR or O_CREAT, 438)
-    private var contentSize = nativeHeap.alloc<stat>().apply { stat(file.absolute, this.ptr) }.st_size -1
+internal data class OutputStream(val file: FileCommon) {
+    private var fd: Int = open(file.absoluteFilename, O_RDWR or O_CREAT, 438)
+    private var contentSize = nativeHeap.alloc<stat>().apply { stat(file.absoluteFilename, this.ptr) }.st_size -1
 
     private fun writeBytes(bytes: ByteArray, offset: Long = 0L): ssize_t {
         if (offset>0) skip(offset)
