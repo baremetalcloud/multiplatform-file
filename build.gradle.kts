@@ -1,9 +1,9 @@
-version = "0.58"
+version="0.58"
 group = "com.baremetalcloud"
 
 plugins {
     kotlin("multiplatform") version ("1.5.31")
-    id("com.vanniktech.maven.publish") version ("0.15.1")
+    id("com.vanniktech.maven.publish") version ("0.18.0")
 }
 
 repositories {
@@ -86,7 +86,6 @@ plugins.withId("com.vanniktech.maven.publish") {
         sonatypeHost = com.vanniktech.maven.publish.SonatypeHost.S01
     }
 }
-
 
 
 
