@@ -1,12 +1,13 @@
-version="0.58"
+version="0.59"
 group = "com.baremetalcloud"
 
 plugins {
-    kotlin("multiplatform") version ("1.5.31")
-    id("com.vanniktech.maven.publish") version ("0.18.0")
+    kotlin("multiplatform") version ("1.6.10")
+    id("com.vanniktech.maven.publish") version ("0.15.1")
 }
 
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 
@@ -38,7 +39,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-common"))
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1") { version { strictly("1.5.1") } }
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0") { version { strictly("1.6.0") } }
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.3.0")
             }
         }
@@ -46,7 +47,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
-                implementation("com.baremetalcloud:multiplatform-runblocking:1.0")
+                implementation("com.baremetalcloud:multiplatform-runblocking:1.2")
             }
         }
         val jvmMain by getting {
