@@ -4,8 +4,8 @@ pipeline {
     disableConcurrentBuilds()
   }
   tools {
-    gradle 'gradle-7.0'
-    jdk 'jdk-11.0.11'
+    gradle 'gradle-7.3.3'
+    jdk 'jdk-16.0.1'
   }
   environment {
     SONATYPE_CREDS = credentials('sonatype')
